@@ -19,7 +19,7 @@ public class StandardError implements Serializable{
 	@JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss", timezone = "UTC")
 	private Instant timestamp;
 	private Integer status;
-	private String error;
+	private String identifier;
 	private String message;
 	private String path;
 }

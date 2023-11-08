@@ -23,7 +23,7 @@ public class ResourceExceptionHandler {
 		StandardError err = new StandardError();
 		err.setTimestamp(Instant.now());
 		err.setStatus(notFound.value());
-		err.setError("Resource not found.");
+		err.setIdentifier("Resource not found.");
 		err.setMessage(exception.getMessage());
 		err.setPath(request.getRequestURI());
 
@@ -36,9 +36,13 @@ public class ResourceExceptionHandler {
 
 		err.setTimestamp(Instant.now());
 		err.setStatus(badRequest.value());
-		err.setError(exception.getError().toString());
+		err.setIdentifier(exception.getError().toString());
 		err.setMessage(exception.getMessage());
-		err.setPath(exception.getMethod().concat(" ").concat(exception.getHref()));
+		err.setPath(exception.getMethod()
+				.concat(" ")
+				.concat("/api/")
+				.concat(exception.getHref())
+		);
 
 		return ResponseEntity.status(badRequest).body(err);
 	}

@@ -21,6 +21,15 @@ public interface DatabaseService {
     void persist(final String query, final Object object);
 
     /**
+     * Persist return id long.
+     *
+     * @param query  the query
+     * @param object the object
+     * @return the long
+     */
+    Long persistReturn(final String query, final Object object);
+
+    /**
      * Persist.
      *
      * @param query  the query

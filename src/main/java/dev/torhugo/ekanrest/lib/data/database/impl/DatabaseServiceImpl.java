@@ -8,6 +8,8 @@ import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
@@ -26,6 +28,16 @@ public class DatabaseServiceImpl implements DatabaseService {
     public void persist(final String query, final Object object) {
         final var params = new BeanPropertySqlParameterSource(object);
         this.namedParameterJdbcTemplate.update(query, params);
+    }
+
+    @Override
+    public Long persistReturn(String query, Object object) {
+        final var params = new BeanPropertySqlParameterSource(object);
+        KeyHolder keyHolder = new GeneratedKeyHolder();
+
+        this.namedParameterJdbcTemplate.update(query, params, keyHolder);
+
+        return keyHolder.getKey().longValue();
     }
 
     @Override
