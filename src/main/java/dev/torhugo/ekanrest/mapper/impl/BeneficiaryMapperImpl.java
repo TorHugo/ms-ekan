@@ -9,9 +9,10 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 
 import static dev.torhugo.ekanrest.util.ConstantUtil.*;
-import static dev.torhugo.ekanrest.util.MethodUtil.buildToGet;
+import static dev.torhugo.ekanrest.util.MethodUtil.*;
 
 @Component
 public class BeneficiaryMapperImpl implements BeneficiaryMapper {
@@ -52,10 +53,35 @@ public class BeneficiaryMapperImpl implements BeneficiaryMapper {
                     .build();
     }
 
+    @Override
+    public BeneficiaryModel mappingToUpdate(final BeneficiaryModel beneficiaryModel,
+                                            final BeneficiaryBaseDTO newBeneficiary) {
+        beneficiaryModel.setName(Objects.isNull(newBeneficiary.name()) ? beneficiaryModel.getName() : newBeneficiary.name());
+        beneficiaryModel.setBirthDate(Objects.isNull(newBeneficiary.birthDate()) ? beneficiaryModel.getBirthDate() : newBeneficiary.birthDate());
+        beneficiaryModel.setPhoneNumber(Objects.isNull(newBeneficiary.phoneNumber()) ? beneficiaryModel.getPhoneNumber() : newBeneficiary.phoneNumber());
+        return beneficiaryModel;
+    }
+
+    @Override
+    public BeneficiaryFullResponseDTO mappingToResponseUpdate(final BeneficiaryModel beneficiaryModel,
+                                                          final BeneficiaryBaseDTO newBeneficiary) {
+        return BeneficiaryFullResponseDTO.builder()
+                .beneficiaryId(beneficiaryModel.getBeneficiaryId())
+                .name(Objects.isNull(newBeneficiary.name()) ? beneficiaryModel.getName() : newBeneficiary.name())
+                .birthDate(Objects.isNull(newBeneficiary.birthDate()) ? beneficiaryModel.getBirthDate() : newBeneficiary.birthDate())
+                .phoneNumber(Objects.isNull(newBeneficiary.phoneNumber()) ? beneficiaryModel.getPhoneNumber() : newBeneficiary.phoneNumber())
+                .createdAt(beneficiaryModel.getCreatedAt())
+                .updatedAt(LocalDateTime.now())
+                .links(buildLink(beneficiaryModel.getBeneficiaryId()))
+                .build();
+    }
+
     private List<LinkResponseDTO> buildLink(final Long beneficiaryId) {
         List<LinkResponseDTO> links = new ArrayList<>();
         links.add(buildToGet(MESSAGE_RETRIEVE_BENEFICIARY, PATH_RETRIEVE_BENEFICIARY, beneficiaryId.toString()));
         links.add(buildToGet(MESSAGE_RETRIEVE_DOCUMENTS_BENEFICIARY, PATH_RETRIEVE_DOCUMENTS_BENEFICIARY, beneficiaryId.toString()));
+        links.add(buildToPost(MESSAGE_ADD_DOCUMENT_TO_BENEFICIARY, PATH_ADD_DOCUMENT_TO_BENEFICIARY, beneficiaryId.toString()));
+        links.add(buildToPut(MESSAGE_UPDATE_TO_BENEFICIARY, PATH_UPDATE_TO_BENEFICIARY, beneficiaryId.toString()));
         return links;
     }
 }

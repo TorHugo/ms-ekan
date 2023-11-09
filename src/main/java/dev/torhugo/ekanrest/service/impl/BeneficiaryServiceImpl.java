@@ -1,6 +1,7 @@
 package dev.torhugo.ekanrest.service.impl;
 
 import dev.torhugo.ekanrest.lib.data.domain.BeneficiaryModel;
+import dev.torhugo.ekanrest.lib.data.domain.DocumentModel;
 import dev.torhugo.ekanrest.lib.data.dto.*;
 import dev.torhugo.ekanrest.lib.exception.impl.DataBaseException;
 import dev.torhugo.ekanrest.mapper.BeneficiaryMapper;
@@ -35,7 +36,7 @@ public class BeneficiaryServiceImpl implements BeneficiaryService {
     public BeneficiaryResponseDTO createBeneficiary(final BeneficiaryInclusionDTO beneficiary) {
         log.info("[1] Validating existing Beneficiary with name: {}.", beneficiary.name());
         if (retrieveBeneficiary(beneficiary.name()))
-            throw new DataBaseException("Beneficiary already exists!", beneficiary.name(), PATH_RETRIEVE_BENEFICIARY, "[GET]");
+            throwException(MESSAGE_BENEFICIARY_ALREADY_EXISTS, beneficiary.name(), PATH_CREATE_BENEFICIARY, HttpMethod.GET.name());
         log.info("[2] Mapping to Beneficiary.");
         final BeneficiaryModel model = mappingBeneficiary(beneficiary);
         log.info("[3] Saving to beneficiary.");
@@ -60,6 +61,43 @@ public class BeneficiaryServiceImpl implements BeneficiaryService {
         return retrieveDocumentsByBeneficiaryId(beneficiaryModel);
     }
 
+    @Override
+    public BeneficiaryResponseDTO addDocument(final Long beneficiaryId,
+                                        final List<DocumentInclusionDTO> documents) {
+        log.info("[1] getBeneficiaryById().");
+        final BeneficiaryModel beneficiaryModel = retrieveBeneficiaryById(beneficiaryId);
+        log.info("[2] Saving to documents.");
+        saveDocument(documents, beneficiaryId);
+        log.info("[3] Mapping to return.");
+        return mappingToResponseCreate(beneficiaryModel, beneficiaryId);
+    }
+
+    @Override
+    public BeneficiaryFullResponseDTO updateBeneficiary(final Long beneficiaryId,
+                                                    final BeneficiaryBaseDTO newBeneficiary) {
+        log.info("[1] updateBeneficiary().");
+        final BeneficiaryModel beneficiaryModel = retrieveBeneficiaryById(beneficiaryId);
+        log.info("[2] Update to beneficiary in the database.");
+        updateBeneficiary(beneficiaryModel, newBeneficiary);
+        log.info("[3] Mapping to return.");
+        return mappingToResponseUpdate(beneficiaryModel, newBeneficiary);
+    }
+
+    private BeneficiaryFullResponseDTO mappingToResponseUpdate(final BeneficiaryModel beneficiaryModel,
+                                                           final BeneficiaryBaseDTO newBeneficiary) {
+        return beneficiaryMapping.mappingToResponseUpdate(beneficiaryModel, newBeneficiary);
+    }
+
+    private void updateBeneficiary(final BeneficiaryModel beneficiaryModel,
+                                   final BeneficiaryBaseDTO beneficiary) {
+        beneficiaryRepository.updateBeneficiary(mappingBeneficiary(beneficiaryModel, beneficiary));
+    }
+
+    private BeneficiaryModel mappingBeneficiary(final BeneficiaryModel beneficiaryModel,
+                                                final BeneficiaryBaseDTO beneficiary) {
+        return beneficiaryMapping.mappingToUpdate(beneficiaryModel, beneficiary);
+    }
+
     private BeneficiariesDTO retrieveDocumentsByBeneficiaryId(final BeneficiaryModel beneficiary) {
         log.info("[2] Mapping to return for beneficiaryId: {}.", beneficiary.getBeneficiaryId());
         final List<DocumentDTO> documents = documentService.retrieveDocumentByBeneficiaryId(beneficiary.getBeneficiaryId());
@@ -75,7 +113,7 @@ public class BeneficiaryServiceImpl implements BeneficiaryService {
 
 
     private BeneficiariesDTO mappingBeneficiaries(final BeneficiaryModel beneficiary,
-                                                        final List<DocumentDTO> documents) {
+                                                  final List<DocumentDTO> documents) {
         return beneficiaryMapping.mappingBeneficiaries(beneficiary, documents);
     }
 

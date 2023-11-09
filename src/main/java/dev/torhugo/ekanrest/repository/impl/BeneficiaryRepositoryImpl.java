@@ -30,6 +30,9 @@ public class BeneficiaryRepositoryImpl implements BeneficiaryRepository {
     @Value("${SPI.BENEFICIARY_TB}")
     private String queryPersistBeneficiary;
 
+    @Value("${SPU.BENEFICIARY_TB}")
+    private String queryUpdateBeneficiary;
+
     @Value("${SPS.BENEFICIARY_TB}")
     private String queryRetrieveBeneficiaries;
 
@@ -58,6 +61,11 @@ public class BeneficiaryRepositoryImpl implements BeneficiaryRepository {
                         buildParamId(beneficiaryId),
                         BeanPropertyRowMapper.newInstance(BeneficiaryModel.class))
                 .orElse(null);
+    }
+
+    @Override
+    public void updateBeneficiary(final BeneficiaryModel beneficiaryModel) {
+        service.persist(queryUpdateBeneficiary, beneficiaryModel);
     }
 
     private MapSqlParameterSource buildParamName(final String name) {

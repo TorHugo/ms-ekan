@@ -17,4 +17,24 @@ public class MethodUtil {
                 .build();
     }
 
+    public static LinkResponseDTO buildToPost(final String description,
+                                             final String path,
+                                             final String identifier){
+        return LinkResponseDTO.builder()
+                .description(description)
+                .method(HttpMethod.POST.name())
+                .href("/api/".concat(path).concat(identifier))
+                .build();
+    }
+
+    public static LinkResponseDTO buildToPut(final String description,
+                                              final String path,
+                                              final String identifier){
+        return LinkResponseDTO.builder()
+                .description(description)
+                .method(HttpMethod.PUT.name())
+                .href("/api/".concat(path).concat(identifier))
+                .build();
+    }
+
 }

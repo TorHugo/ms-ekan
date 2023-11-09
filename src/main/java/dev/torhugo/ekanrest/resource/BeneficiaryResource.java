@@ -1,9 +1,6 @@
 package dev.torhugo.ekanrest.resource;
 
-import dev.torhugo.ekanrest.lib.data.dto.BeneficiariesDTO;
-import dev.torhugo.ekanrest.lib.data.dto.BeneficiaryInclusionDTO;
-import dev.torhugo.ekanrest.lib.data.dto.BeneficiaryResponseDTO;
-import dev.torhugo.ekanrest.lib.data.dto.DocumentDTO;
+import dev.torhugo.ekanrest.lib.data.dto.*;
 import dev.torhugo.ekanrest.service.BeneficiaryService;
 import dev.torhugo.ekanrest.service.DocumentService;
 import dev.torhugo.ekanrest.util.resource.ResourceUtil;
@@ -23,8 +20,26 @@ public class BeneficiaryResource implements ResourceUtil {
     private final DocumentService documentService;
 
     @PostMapping("/create")
-    public ResponseEntity<ResponseUtil<BeneficiaryResponseDTO>> createBeneficiary(@RequestBody final BeneficiaryInclusionDTO beneficiary){
+    public ResponseEntity<ResponseUtil<BeneficiaryResponseDTO>> createBeneficiary(
+            @RequestBody final BeneficiaryInclusionDTO beneficiary
+    ){
         return returnSuccess(service.createBeneficiary(beneficiary));
+    }
+
+    @PostMapping("/add-document/{beneficiaryId}")
+    public ResponseEntity<ResponseUtil<BeneficiaryResponseDTO>> addDocument(
+            @PathVariable final Long beneficiaryId,
+            @RequestBody final List<DocumentInclusionDTO> documents
+    ){
+        return returnSuccess(service.addDocument(beneficiaryId, documents));
+    }
+
+    @PutMapping("/update-beneficiary/{beneficiaryId}")
+    public ResponseEntity<ResponseUtil<BeneficiaryFullResponseDTO>> updateBeneficiary(
+            @PathVariable final Long beneficiaryId,
+            @RequestBody final BeneficiaryBaseDTO newBeneficiary
+    ){
+        return returnSuccess(service.updateBeneficiary(beneficiaryId, newBeneficiary));
     }
 
     @GetMapping("/retrieve/all")

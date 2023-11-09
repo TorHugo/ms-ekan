@@ -1,8 +1,6 @@
 package dev.torhugo.ekanrest.service;
 
-import dev.torhugo.ekanrest.lib.data.dto.BeneficiariesDTO;
-import dev.torhugo.ekanrest.lib.data.dto.BeneficiaryInclusionDTO;
-import dev.torhugo.ekanrest.lib.data.dto.BeneficiaryResponseDTO;
+import dev.torhugo.ekanrest.lib.data.dto.*;
 
 import java.util.List;
 
@@ -33,4 +31,22 @@ public interface BeneficiaryService {
      * @return the beneficiary by id
      */
     BeneficiariesDTO getBeneficiaryById(final Long beneficiaryId);
+
+    /**
+     * Add document beneficiaries dto.
+     *
+     * @param beneficiaryId the beneficiary id
+     * @param documents     the documents with beneficiary
+     * @return the beneficiaries dto
+     */
+    BeneficiaryResponseDTO addDocument(final Long beneficiaryId, final List<DocumentInclusionDTO> documents);
+
+    /**
+     * Update to beneficiary.
+     *
+     * @param beneficiaryId the beneficiary id
+     * @param newBeneficiary   the beneficiary
+     * @return the beneficiary response dto
+     */
+    BeneficiaryFullResponseDTO updateBeneficiary(final Long beneficiaryId, final BeneficiaryBaseDTO newBeneficiary);
 }

@@ -39,4 +39,6 @@ public interface BeneficiaryRepository {
      * @return the beneficiary model
      */
     BeneficiaryModel retrieveById(final Long beneficiaryId);
+
+    void updateBeneficiary(final BeneficiaryModel beneficiaryModel);
 }
