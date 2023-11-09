@@ -24,14 +24,23 @@ public class BeneficiaryRepositoryImpl implements BeneficiaryRepository {
     @Value("${SPS.BENEFICIARY_TB.WHERE.NAME}")
     private String queryRetrieveBeneficiaryByName;
 
+    @Value("${SPS.BENEFICIARY_TB.WHERE.NAME.AND.IN_ACTIVE}")
+    private String queryRetrieveBeneficiaryByNameIsNotActive;
+
     @Value("${SPS.BENEFICIARY_TB.WHERE.BENEFICIARY_ID}")
     private String queryRetrieveBeneficiaryById;
 
     @Value("${SPI.BENEFICIARY_TB}")
     private String queryPersistBeneficiary;
 
-    @Value("${SPU.BENEFICIARY_TB}")
+    @Value("${SPU.BENEFICIARY_TB.WHERE.BENEFICIARY_ID}")
     private String queryUpdateBeneficiary;
+
+    @Value("${SPD.BENEFICIARY_TB.WHERE.BENEFICIARY_ID}")
+    private String queryDeleteBeneficiary;
+
+    @Value("${SPU.REACTIVE_BENEFICIARY}")
+    private String queryReactivateBeneficiary;
 
     @Value("${SPS.BENEFICIARY_TB}")
     private String queryRetrieveBeneficiaries;
@@ -66,6 +75,24 @@ public class BeneficiaryRepositoryImpl implements BeneficiaryRepository {
     @Override
     public void updateBeneficiary(final BeneficiaryModel beneficiaryModel) {
         service.persist(queryUpdateBeneficiary, beneficiaryModel);
+    }
+
+    @Override
+    public void deleteById(final Long beneficiaryId) {
+        service.persist(queryDeleteBeneficiary, buildParamId(beneficiaryId));
+    }
+
+    @Override
+    public void reactivateBeneficiary(Long beneficiaryId) {
+        service.persist(queryReactivateBeneficiary, buildParamId(beneficiaryId));
+    }
+
+    @Override
+    public BeneficiaryModel retrieveByNameIsNotActive(final String name) {
+        return service.retrieve(queryRetrieveBeneficiaryByNameIsNotActive,
+                        buildParamName(name),
+                        BeanPropertyRowMapper.newInstance(BeneficiaryModel.class))
+                .orElse(null);
     }
 
     private MapSqlParameterSource buildParamName(final String name) {

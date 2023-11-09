@@ -76,12 +76,30 @@ public class BeneficiaryMapperImpl implements BeneficiaryMapper {
                 .build();
     }
 
+    @Override
+    public BeneficiaryResponseDTO mappingToResponseDelete(final BeneficiaryModel beneficiaryModel) {
+        return BeneficiaryResponseDTO.builder()
+                .beneficiaryId(beneficiaryModel.getBeneficiaryId())
+                .name(beneficiaryModel.getName())
+                .createdAt(beneficiaryModel.getCreatedAt())
+                .updatedAt(beneficiaryModel.getUpdatedAt())
+                .links(buildLinkDelete(beneficiaryModel.getName()))
+                .build();
+    }
+
+    private List<LinkResponseDTO> buildLinkDelete(final String name) {
+        List<LinkResponseDTO> links = new ArrayList<>();
+        links.add(buildToPost(MESSAGE_REACTIVATE_BENEFICIARY, PATH_REACTIVATE_BENEFICIARY, name));
+        return links;
+    }
+
     private List<LinkResponseDTO> buildLink(final Long beneficiaryId) {
         List<LinkResponseDTO> links = new ArrayList<>();
         links.add(buildToGet(MESSAGE_RETRIEVE_BENEFICIARY, PATH_RETRIEVE_BENEFICIARY, beneficiaryId.toString()));
         links.add(buildToGet(MESSAGE_RETRIEVE_DOCUMENTS_BENEFICIARY, PATH_RETRIEVE_DOCUMENTS_BENEFICIARY, beneficiaryId.toString()));
-        links.add(buildToPost(MESSAGE_ADD_DOCUMENT_TO_BENEFICIARY, PATH_ADD_DOCUMENT_TO_BENEFICIARY, beneficiaryId.toString()));
-        links.add(buildToPut(MESSAGE_UPDATE_TO_BENEFICIARY, PATH_UPDATE_TO_BENEFICIARY, beneficiaryId.toString()));
+        links.add(buildToPost(MESSAGE_ADD_DOCUMENT_BENEFICIARY, PATH_ADD_DOCUMENT_BENEFICIARY, beneficiaryId.toString()));
+        links.add(buildToPut(MESSAGE_UPDATE_BENEFICIARY, PATH_UPDATE_BENEFICIARY, beneficiaryId.toString()));
+        links.add(buildToDelete(MESSAGE_DELETE_BENEFICIARY, PATH_DELETE_BENEFICIARY, beneficiaryId.toString()));
         return links;
     }
 }

@@ -49,4 +49,20 @@ public interface BeneficiaryService {
      * @return the beneficiary response dto
      */
     BeneficiaryFullResponseDTO updateBeneficiary(final Long beneficiaryId, final BeneficiaryBaseDTO newBeneficiary);
+
+    /**
+     * Delete beneficiary by beneficiaryId.
+     *
+     * @param beneficiaryId the beneficiary id
+     * @return the beneficiary response dto
+     */
+    BeneficiaryResponseDTO deleteBeneficiary(final Long beneficiaryId);
+
+    /**
+     * Reactivate beneficiary with name.
+     *
+     * @param name the name
+     * @return the beneficiary response dto
+     */
+    BeneficiaryResponseDTO reactivateBeneficiary(final String name);
 }

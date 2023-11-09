@@ -35,8 +35,8 @@ public class BeneficiaryServiceImpl implements BeneficiaryService {
     @Override
     public BeneficiaryResponseDTO createBeneficiary(final BeneficiaryInclusionDTO beneficiary) {
         log.info("[1] Validating existing Beneficiary with name: {}.", beneficiary.name());
-        if (retrieveBeneficiary(beneficiary.name()))
-            throwException(MESSAGE_BENEFICIARY_ALREADY_EXISTS, beneficiary.name(), PATH_CREATE_BENEFICIARY, HttpMethod.GET.name());
+        if (Objects.nonNull(retrieveBeneficiary(beneficiary.name())))
+            throwException(MESSAGE_BENEFICIARY_ALREADY_EXISTS, beneficiary.name(), PATH_RETRIEVE_BENEFICIARY, HttpMethod.GET.name());
         log.info("[2] Mapping to Beneficiary.");
         final BeneficiaryModel model = mappingBeneficiary(beneficiary);
         log.info("[3] Saving to beneficiary.");
@@ -81,6 +81,40 @@ public class BeneficiaryServiceImpl implements BeneficiaryService {
         updateBeneficiary(beneficiaryModel, newBeneficiary);
         log.info("[3] Mapping to return.");
         return mappingToResponseUpdate(beneficiaryModel, newBeneficiary);
+    }
+
+    @Override
+    public BeneficiaryResponseDTO deleteBeneficiary(final Long beneficiaryId) {
+        log.info("[1] updateBeneficiary().");
+        final BeneficiaryModel beneficiaryModel = retrieveBeneficiaryById(beneficiaryId);
+        log.info("[2] Delete to beneficiary in the database.");
+        deleteBeneficiary(beneficiaryModel);
+        log.info("[3] Mapping to return.");
+        return mappingToResponseDelete(beneficiaryModel);
+    }
+
+    @Override
+    public BeneficiaryResponseDTO reactivateBeneficiary(final String name) {
+        log.info("[1] Validating existing Beneficiary with name: {}.", name);
+        final BeneficiaryModel beneficiaryModel = retrieveBeneficiaryIsNotActive(name);
+        if (Objects.isNull(beneficiaryModel))
+            throwException(MESSAGE_BENEFICIARY_NOT_FOUND, name, PATH_CREATE_BENEFICIARY, HttpMethod.POST.name());
+        log.info("[2] Reactivate beneficiary.");
+        reactivateBeneficiary(beneficiaryModel);
+        log.info("[3] Mapping to return.");
+        return mappingToResponseCreate(beneficiaryModel, beneficiaryModel.getBeneficiaryId());
+    }
+
+    private void reactivateBeneficiary(final BeneficiaryModel beneficiaryModel) {
+        beneficiaryRepository.reactivateBeneficiary(beneficiaryModel.getBeneficiaryId());
+    }
+
+    private BeneficiaryResponseDTO mappingToResponseDelete(final BeneficiaryModel beneficiaryModel) {
+        return beneficiaryMapping.mappingToResponseDelete(beneficiaryModel);
+    }
+
+    private void deleteBeneficiary(final BeneficiaryModel beneficiaryModel) {
+        beneficiaryRepository.deleteById(beneficiaryModel.getBeneficiaryId());
     }
 
     private BeneficiaryFullResponseDTO mappingToResponseUpdate(final BeneficiaryModel beneficiaryModel,
@@ -140,8 +174,12 @@ public class BeneficiaryServiceImpl implements BeneficiaryService {
         return beneficiaryMapping.mapping(beneficiary);
     }
 
-    private boolean retrieveBeneficiary(final String name) {
-        return Objects.nonNull(beneficiaryRepository.retrieveByName(name));
+    private BeneficiaryModel retrieveBeneficiary(final String name) {
+        return beneficiaryRepository.retrieveByName(name);
+    }
+
+    private BeneficiaryModel retrieveBeneficiaryIsNotActive(final String name) {
+        return beneficiaryRepository.retrieveByNameIsNotActive(name);
     }
 
     private BeneficiaryModel retrieveBeneficiaryById(final Long beneficiaryId) {

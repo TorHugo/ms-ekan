@@ -42,6 +42,20 @@ public class BeneficiaryResource implements ResourceUtil {
         return returnSuccess(service.updateBeneficiary(beneficiaryId, newBeneficiary));
     }
 
+    @DeleteMapping("/delete-beneficiary/{beneficiaryId}")
+    public ResponseEntity<ResponseUtil<BeneficiaryResponseDTO>> deleteBeneficiary(
+            @PathVariable final Long beneficiaryId
+    ){
+        return returnSuccess(service.deleteBeneficiary(beneficiaryId));
+    }
+
+    @PostMapping("/reactivate")
+    public ResponseEntity<ResponseUtil<BeneficiaryResponseDTO>> reactivateBeneficiary(
+            @RequestParam(value = "name") final String name
+    ){
+        return returnSuccess(service.reactivateBeneficiary(name));
+    }
+
     @GetMapping("/retrieve/all")
     public ResponseEntity<ResponseUtil<List<BeneficiariesDTO>>> getAllBeneficiaries(){
         return returnSuccess(service.getAllBeneficiaries());

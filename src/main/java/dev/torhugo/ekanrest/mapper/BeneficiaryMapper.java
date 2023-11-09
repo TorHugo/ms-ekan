@@ -57,4 +57,12 @@ public interface BeneficiaryMapper {
      */
     BeneficiaryFullResponseDTO mappingToResponseUpdate(final BeneficiaryModel beneficiaryModel,
                                                    final BeneficiaryBaseDTO newBeneficiary);
+
+    /**
+     * Mapping to response delete beneficiary response dto.
+     *
+     * @param beneficiaryModel the beneficiary model
+     * @return the beneficiary response dto
+     */
+    BeneficiaryResponseDTO mappingToResponseDelete(final BeneficiaryModel beneficiaryModel);
 }

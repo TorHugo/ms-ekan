@@ -37,4 +37,13 @@ public class MethodUtil {
                 .build();
     }
 
+    public static LinkResponseDTO buildToDelete(final String description,
+                                             final String path,
+                                             final String identifier){
+        return LinkResponseDTO.builder()
+                .description(description)
+                .method(HttpMethod.DELETE.name())
+                .href("/api/".concat(path).concat(identifier))
+                .build();
+    }
 }

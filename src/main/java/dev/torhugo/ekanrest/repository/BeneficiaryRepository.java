@@ -41,4 +41,26 @@ public interface BeneficiaryRepository {
     BeneficiaryModel retrieveById(final Long beneficiaryId);
 
     void updateBeneficiary(final BeneficiaryModel beneficiaryModel);
+
+    /**
+     * Delete by id.
+     *
+     * @param beneficiaryId the beneficiary id
+     */
+    void deleteById(final Long beneficiaryId);
+
+    /**
+     * Reactivate beneficiary.
+     *
+     * @param beneficiaryId the beneficiary id
+     */
+    void reactivateBeneficiary(final Long beneficiaryId);
+
+    /**
+     * Retrieve by name is not active beneficiary model.
+     *
+     * @param name the name
+     * @return the beneficiary model
+     */
+    BeneficiaryModel retrieveByNameIsNotActive(final String name);
 }
