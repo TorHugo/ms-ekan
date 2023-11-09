@@ -33,11 +33,7 @@ public class BeneficiaryMapperImpl implements BeneficiaryMapper {
                 .beneficiaryId(beneficiaryId)
                 .name(model.getName())
                 .createdAt(LocalDateTime.now())
-                .links(Collections.singletonList(
-                        buildToGet(MESSAGE_RETRIEVE_BENEFICIARY,
-                                    PATH_RETRIEVE_BENEFICIARY,
-                                    beneficiaryId.toString()))
-                )
+                .links(buildLink(beneficiaryId))
                 .build();
     }
 

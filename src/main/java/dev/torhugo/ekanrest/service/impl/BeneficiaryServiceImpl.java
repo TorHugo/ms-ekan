@@ -9,13 +9,17 @@ import dev.torhugo.ekanrest.service.BeneficiaryService;
 import dev.torhugo.ekanrest.service.DocumentService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpMethod;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.IllegalFormatCodePointException;
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
-import static dev.torhugo.ekanrest.util.ConstantUtil.PATH_RETRIEVE_BENEFICIARY;
+import static dev.torhugo.ekanrest.util.ConstantUtil.*;
+import static dev.torhugo.ekanrest.util.ExceptionUtil.throwException;
 
 @Service
 @Slf4j
@@ -44,24 +48,31 @@ public class BeneficiaryServiceImpl implements BeneficiaryService {
 
     @Override
     public List<BeneficiariesDTO> getAllBeneficiaries() {
-        log.info("[1] Find all beneficiaries.");
+        log.info("[1] getAllBeneficiaries().");
         final List<BeneficiaryModel> beneficiaries = retrieveBeneficiaries();
-        log.info("[2] Retrieve documents.");
         return retrieveDocuments(beneficiaries);
     }
 
-    private List<BeneficiariesDTO> retrieveDocuments(final List<BeneficiaryModel> beneficiaries) {
-        List<BeneficiariesDTO> lsBeneficiaries = new ArrayList<>();
-        for (BeneficiaryModel beneficiary: beneficiaries){
-            log.info("[3] Retrieve documents by beneficiaryId: {}.", beneficiary.getBeneficiaryId());
-            final List<DocumentDTO> documents =
-                    documentService.retrieveDocumentByBeneficiaryId(beneficiary.getBeneficiaryId());
-            log.info("[4] Mapping to documents and beneficiary in DTO.");
-            lsBeneficiaries.add(mappingBeneficiaries(beneficiary, documents));
-        }
-        log.info("[5] Mapping to return.");
-        return lsBeneficiaries;
+    @Override
+    public BeneficiariesDTO getBeneficiaryById(final Long beneficiaryId) {
+        log.info("[1] getBeneficiaryById().");
+        final BeneficiaryModel beneficiaryModel = retrieveBeneficiaryById(beneficiaryId);
+        return retrieveDocumentsByBeneficiaryId(beneficiaryModel);
     }
+
+    private BeneficiariesDTO retrieveDocumentsByBeneficiaryId(final BeneficiaryModel beneficiary) {
+        log.info("[2] Mapping to return for beneficiaryId: {}.", beneficiary.getBeneficiaryId());
+        final List<DocumentDTO> documents = documentService.retrieveDocumentByBeneficiaryId(beneficiary.getBeneficiaryId());
+        return mappingBeneficiaries(beneficiary, documents);
+    }
+
+    private List<BeneficiariesDTO> retrieveDocuments(final List<BeneficiaryModel> beneficiaries) {
+        log.info("[2] Mapping to return.");
+        return beneficiaries.stream()
+                .map(this::retrieveDocumentsByBeneficiaryId)
+                .toList();
+    }
+
 
     private BeneficiariesDTO mappingBeneficiaries(final BeneficiaryModel beneficiary,
                                                         final List<DocumentDTO> documents) {
@@ -69,6 +80,7 @@ public class BeneficiaryServiceImpl implements BeneficiaryService {
     }
 
     private List<BeneficiaryModel> retrieveBeneficiaries() {
+        log.info("[1] Find all beneficiaries.");
         return beneficiaryRepository.retrieveAllBeneficiaries();
     }
 
@@ -92,5 +104,14 @@ public class BeneficiaryServiceImpl implements BeneficiaryService {
 
     private boolean retrieveBeneficiary(final String name) {
         return Objects.nonNull(beneficiaryRepository.retrieveByName(name));
+    }
+
+    private BeneficiaryModel retrieveBeneficiaryById(final Long beneficiaryId) {
+        log.info("[2] Retrieve Beneficiary by Id: {}.", beneficiaryId);
+        final BeneficiaryModel beneficiaryModel = beneficiaryRepository.retrieveById(beneficiaryId);
+        log.info("[3] Validating existing Beneficiary with id: {}.", beneficiaryId);
+        if (Objects.isNull(beneficiaryModel))
+            throwException(MESSAGE_BENEFICIARY_NOT_FOUND, beneficiaryId.toString(), PATH_CREATE_BENEFICIARY, HttpMethod.POST.name());
+        return beneficiaryModel;
     }
 }

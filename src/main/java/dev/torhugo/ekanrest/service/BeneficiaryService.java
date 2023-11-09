@@ -25,4 +25,12 @@ public interface BeneficiaryService {
      * @return the all beneficiaries
      */
     List<BeneficiariesDTO> getAllBeneficiaries();
+
+    /**
+     * Gets beneficiary by id.
+     *
+     * @param beneficiaryId the beneficiary id
+     * @return the beneficiary by id
+     */
+    BeneficiariesDTO getBeneficiaryById(final Long beneficiaryId);
 }

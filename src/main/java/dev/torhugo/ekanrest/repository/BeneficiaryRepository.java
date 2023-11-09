@@ -31,4 +31,12 @@ public interface BeneficiaryRepository {
      * @return the list
      */
     List<BeneficiaryModel> retrieveAllBeneficiaries();
+
+    /**
+     * Retrieve by id beneficiary model.
+     *
+     * @param beneficiaryId the beneficiary id
+     * @return the beneficiary model
+     */
+    BeneficiaryModel retrieveById(final Long beneficiaryId);
 }
