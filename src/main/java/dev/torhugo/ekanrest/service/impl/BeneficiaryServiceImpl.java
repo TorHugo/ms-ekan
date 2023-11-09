@@ -1,9 +1,7 @@
 package dev.torhugo.ekanrest.service.impl;
 
 import dev.torhugo.ekanrest.lib.data.domain.BeneficiaryModel;
-import dev.torhugo.ekanrest.lib.data.domain.DocumentModel;
 import dev.torhugo.ekanrest.lib.data.dto.*;
-import dev.torhugo.ekanrest.lib.exception.impl.DataBaseException;
 import dev.torhugo.ekanrest.mapper.BeneficiaryMapper;
 import dev.torhugo.ekanrest.repository.BeneficiaryRepository;
 import dev.torhugo.ekanrest.service.BeneficiaryService;
@@ -13,11 +11,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpMethod;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.IllegalFormatCodePointException;
 import java.util.List;
 import java.util.Objects;
-import java.util.stream.Collectors;
 
 import static dev.torhugo.ekanrest.util.ConstantUtil.*;
 import static dev.torhugo.ekanrest.util.ExceptionUtil.throwException;
