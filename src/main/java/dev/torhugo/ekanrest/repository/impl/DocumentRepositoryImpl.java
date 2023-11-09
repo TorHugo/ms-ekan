@@ -7,7 +7,12 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.PropertySource;
+import org.springframework.jdbc.core.BeanPropertyRowMapper;
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
+import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.stereotype.Repository;
+
+import java.util.List;
 
 @Repository
 @RequiredArgsConstructor
@@ -19,9 +24,22 @@ public class DocumentRepositoryImpl implements DocumentRepository {
 
     @Value("${SPI.DOCUMENT_TB}")
     private String queryPersistDocument;
+    @Value("${SPI.DOCUMENT_TB.WHERE.BENEFICIARY_ID}")
+    private String queryRetrieveByBeneficiaryId;
 
     @Override
     public void saveDocuments(final DocumentModel documentModel) {
         service.persist(queryPersistDocument, documentModel);
+    }
+
+    @Override
+    public List<DocumentModel> retrieveByBeneficiaryId(final Long beneficiaryId) {
+        return service.retrieveList(queryRetrieveByBeneficiaryId,
+                buildParam(beneficiaryId),
+                BeanPropertyRowMapper.newInstance(DocumentModel.class));
+    }
+
+    private MapSqlParameterSource buildParam(final Long beneficiaryId) {
+        return new MapSqlParameterSource("beneficiaryId", beneficiaryId);
     }
 }

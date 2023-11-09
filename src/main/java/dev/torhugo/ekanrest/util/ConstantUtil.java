@@ -7,4 +7,7 @@ public class ConstantUtil {
 
     public static final String MESSAGE_RETRIEVE_BENEFICIARY = "Retrieve Beneficiary by id.";
     public static final String PATH_RETRIEVE_BENEFICIARY = "v1/beneficiary/retrieve/";
+
+    public static final String MESSAGE_RETRIEVE_DOCUMENTS_BENEFICIARY = "Retrieve Documents by BeneficiaryId.";
+    public static final String PATH_RETRIEVE_DOCUMENTS_BENEFICIARY = "v1/beneficiary/retrieve/documents/";
 }

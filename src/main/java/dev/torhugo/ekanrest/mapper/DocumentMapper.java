@@ -1,6 +1,7 @@
 package dev.torhugo.ekanrest.mapper;
 
 import dev.torhugo.ekanrest.lib.data.domain.DocumentModel;
+import dev.torhugo.ekanrest.lib.data.dto.DocumentDTO;
 import dev.torhugo.ekanrest.lib.data.dto.DocumentInclusionDTO;
 
 import java.util.List;
@@ -19,4 +20,12 @@ public interface DocumentMapper {
      */
     List<DocumentModel> mapping(final Long beneficiaryId,
                                 final List<DocumentInclusionDTO> documents);
+
+    /**
+     * Mapping to documents list.
+     *
+     * @param lsDocuments the ls documents
+     * @return the list
+     */
+    List<DocumentDTO> mappingToDocuments(final List<DocumentModel> lsDocuments);
 }

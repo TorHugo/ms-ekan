@@ -21,5 +21,5 @@ public class DocumentModel extends BaseModel {
     private Long beneficiaryId;
     private String typeDocument;
     private String description;
-    private boolean inActive;
+    private Boolean inActive;
 }

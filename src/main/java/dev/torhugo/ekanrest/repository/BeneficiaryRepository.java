@@ -1,6 +1,7 @@
 package dev.torhugo.ekanrest.repository;
 
 import dev.torhugo.ekanrest.lib.data.domain.BeneficiaryModel;
+import java.util.List;
 
 /**
  * The interface Beneficiary Repository.
@@ -23,4 +24,11 @@ public interface BeneficiaryRepository {
      * @return the benefiticiary id
      */
     Long saveBeneficiary(final BeneficiaryModel model);
+
+    /**
+     * Retrieve all beneficiaries list.
+     *
+     * @return the list
+     */
+    List<BeneficiaryModel> retrieveAllBeneficiaries();
 }

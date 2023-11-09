@@ -11,6 +11,8 @@ import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 @Repository
 @RequiredArgsConstructor
 @Slf4j
@@ -25,6 +27,9 @@ public class BeneficiaryRepositoryImpl implements BeneficiaryRepository {
     @Value("${SPI.BENEFICIARY_TB}")
     private String queryPersistBeneficiary;
 
+    @Value("${SPS.BENEFICIARY_TB}")
+    private String queryRetrieveBeneficiaries;
+
     @Override
     public BeneficiaryModel retrieveByName(final String name) {
         return service.retrieve(queryRetrieveBeneficiaryByName,
@@ -36,6 +41,12 @@ public class BeneficiaryRepositoryImpl implements BeneficiaryRepository {
     @Override
     public Long saveBeneficiary(final BeneficiaryModel model) {
         return service.persistReturn(queryPersistBeneficiary, model);
+    }
+
+    @Override
+    public List<BeneficiaryModel> retrieveAllBeneficiaries() {
+        return service.retrieveList(queryRetrieveBeneficiaries,
+                                    BeanPropertyRowMapper.newInstance(BeneficiaryModel.class));
     }
 
     private MapSqlParameterSource buildParamName(final String name) {

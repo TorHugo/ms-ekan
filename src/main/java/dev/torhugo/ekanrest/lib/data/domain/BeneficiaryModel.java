@@ -21,5 +21,5 @@ public class BeneficiaryModel extends BaseModel {
     private String name;
     private String phoneNumber;
     private LocalDate birthDate;
-    private boolean inActive;
+    private Boolean inActive;
 }

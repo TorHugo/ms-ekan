@@ -1,8 +1,12 @@
 package dev.torhugo.ekanrest.mapper;
 
 import dev.torhugo.ekanrest.lib.data.domain.BeneficiaryModel;
+import dev.torhugo.ekanrest.lib.data.dto.BeneficiariesDTO;
 import dev.torhugo.ekanrest.lib.data.dto.BeneficiaryInclusionDTO;
 import dev.torhugo.ekanrest.lib.data.dto.BeneficiaryResponseDTO;
+import dev.torhugo.ekanrest.lib.data.dto.DocumentDTO;
+
+import java.util.List;
 
 /**
  * The interface Document Mapper.
@@ -26,4 +30,13 @@ public interface BeneficiaryMapper {
      */
     BeneficiaryResponseDTO mappingToResponseCreate(final BeneficiaryModel model,
                                                    final Long beneficiaryId);
+
+    /**
+     * Mapping beneficiaries list.
+     *
+     * @param beneficiaries the beneficiaries
+     * @return the list
+     */
+    BeneficiariesDTO mappingBeneficiaries(final BeneficiaryModel beneficiary,
+                                                final List<DocumentDTO> documents);
 }
